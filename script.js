@@ -22,3 +22,7 @@ async function getResponses(responses) {
 
   return responses;
 }
+
+const response = await getResponses('');
+
+await navigator.clipboard.writeText(response);
