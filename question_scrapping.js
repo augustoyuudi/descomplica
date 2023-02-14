@@ -1,28 +1,27 @@
 function getResponse() {
   return new Promise(resolve => {
     setTimeout(() => {
-      const index = document.querySelector('.question__description__index')?.textContent;
+      const questionIndex = document.querySelector('.question__description__index')?.textContent;
       const question = document.querySelector('.question__description__text')?.textContent;
-      const answer = document.querySelector('.question__alternative--correct')?.textContent;
-      resolve([index, question, answer]);
+      const answers = [...document.querySelectorAll('.question__alternative')];
+      const answerIndex = answers.findIndex((question) => question.classList.contains('question__alternative--correct'));
+      const answer = answers[answerIndex]?.textContent;
+      resolve([questionIndex, question, answer, answerIndex]);
     }, 1000);
   });
 }
 
-async function getResponses(responses) {
+await (async function getResponses(responses = '') {
   const navigationLinks = [...document.querySelectorAll('.pagination__item')];
   navigationLinks.pop(); // last link is the score page
+
+  const indexes = ['A', 'B', 'C', 'D', 'E'];
+
   for (const link of navigationLinks) {
     link.click();
-    const [index, question, answer] = await getResponse();
-    responses += `${index}-${question}
-      ${answer}
-    `;
+    const [questionIndex, question, answer, answerIndex] = await getResponse();
+    responses += `${questionIndex.trim()}. ${question.trim()}\n\t${indexes[answerIndex]} - ${answer.trim()}\n`;
   }
 
-  return responses;
-}
-
-const response = await getResponses('');
-
-await navigator.clipboard.writeText(response);
+  await navigator.clipboard.writeText(responses);
+})()
