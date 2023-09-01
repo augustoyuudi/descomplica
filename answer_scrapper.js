@@ -13,7 +13,11 @@ function getResponse() {
 
 await (async function getResponses(responses = '') {
   const navigationLinks = [...document.querySelectorAll('.pagination__item')];
-  navigationLinks.pop(); // last link is the score page
+  const totalQuestions = 7;
+
+  if (navigationLinks.length === totalQuestions) {
+    navigationLinks.pop(); // last link is the score page
+  }
 
   const indexes = ['A', 'B', 'C', 'D', 'E'];
 
